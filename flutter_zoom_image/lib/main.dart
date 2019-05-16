@@ -8,7 +8,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: new Scaffold(
-        body: new ZoomableImage(new AssetImage('images/routemap_sh_cn.png')),
+        body: new ZoomableImage(new AssetImage('assets/images/routemap_sh_cn.png')),
       ),
     );
   }
