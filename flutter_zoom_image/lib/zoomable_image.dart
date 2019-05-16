@@ -17,9 +17,9 @@ class ZoomableImage extends StatefulWidget {
       this.image, {
         Key key,
         this.maxScale = 2.0,
-        this.minScale = 0.25,
+        this.minScale = 0.2,
         this.onTap,
-        this.backgroundColor = Colors.black,
+        this.backgroundColor = Colors.white,
         this.placeholder,
       }) : super(key: key);
 
@@ -38,44 +38,6 @@ class _ZoomableImageState extends State<ZoomableImage> {
   Offset _offset;
   double _previousScale;
   double _scale;
-
-  //Gesture
-  Function() _handleDoubleTap(BuildContext ctx) {
-    return () {
-      var newScale = _scale * 2.0;
-      if (newScale > widget.maxScale) {
-        _centerAndScaleImage();
-        setState(() {});
-        return;
-      }
-      var center = ctx.size.center(Offset.zero);
-      var newOffset = _offset - (center - _offset);
-      setState(() {
-        _scale = newScale;
-        _offset = newOffset;
-      });
-    };
-  }
-
-  void _handleScaleStart(ScaleStartDetails d) {
-    print("starting scale at ${d.focalPoint} from $_offset $_scale");
-    _startingFocalPoint = d.focalPoint;
-    _previousOffset = _offset;
-    _previousScale = _scale;
-  }
-
-  void _handleScaleUpdate(ScaleUpdateDetails d) {
-    var newScale = _previousScale * d.scale;
-    if (newScale > widget.maxScale || newScale < widget.minScale) {
-      return;
-    }
-    final normalizedOffset = (_startingFocalPoint - _previousOffset) / _previousScale;
-    final newOffset = d.focalPoint - normalizedOffset * newScale;
-    setState(() {
-      _scale = newScale;
-      _offset = newOffset;
-    });
-  }
 
   //Event
   @override
@@ -138,6 +100,44 @@ class _ZoomableImageState extends State<ZoomableImage> {
     print("image loaded: $info");
     setState(() {
       _image = info.image;
+    });
+  }
+
+  //Gesture
+  Function() _handleDoubleTap(BuildContext ctx) {
+    return () {
+      var newScale = _scale * 2.0;
+      if (newScale > widget.maxScale) {
+        _centerAndScaleImage();
+        setState(() {});
+        return;
+      }
+      var center = ctx.size.center(Offset.zero);
+      var newOffset = _offset - (center - _offset);
+      setState(() {
+        _scale = newScale;
+        _offset = newOffset;
+      });
+    };
+  }
+
+  void _handleScaleStart(ScaleStartDetails d) {
+    print("starting scale at ${d.focalPoint} from $_offset $_scale");
+    _startingFocalPoint = d.focalPoint;
+    _previousOffset = _offset;
+    _previousScale = _scale;
+  }
+
+  void _handleScaleUpdate(ScaleUpdateDetails d) {
+    var newScale = _previousScale * d.scale;
+    if (newScale > widget.maxScale || newScale < widget.minScale) {
+      return;
+    }
+    final normalizedOffset = (_startingFocalPoint - _previousOffset) / _previousScale;
+    final newOffset = d.focalPoint - normalizedOffset * newScale;
+    setState(() {
+      _scale = newScale;
+      _offset = newOffset;
     });
   }
 
